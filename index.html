@@ -297,19 +297,7 @@ select.inp{appearance:none;cursor:pointer;
   border-radius:6px;color:var(--text-secondary);font-size:0.82rem;font-weight:700;cursor:pointer;font-family:inherit;}
 .po{flex:2;height:38px;background:var(--red);border:none;
   border-radius:6px;color:#fff;font-size:0.82rem;font-weight:700;cursor:pointer;font-family:inherit;}
-.menu-scan-btn{width:100%;max-width:480px;margin-top:10px;padding:16px 20px;
-  background:var(--card-bg);border:1px solid var(--card-border);
-  border-radius:12px;color:var(--text-primary);font-size:0.9rem;font-weight:800;
-  cursor:pointer;transition:all .2s;text-align:left;position:relative;overflow:hidden;
-  display:flex;align-items:center;gap:12px;}
-.menu-scan-btn::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;
-  background:var(--red);transform:scaleX(0);transform-origin:left;transition:transform .2s;}
-.menu-scan-btn:hover{border-color:var(--red);transform:translateY(-2px);box-shadow:0 8px 24px rgba(225,0,42,.15);}
-.menu-scan-btn:hover::before,.menu-scan-btn.pressing::before{transform:scaleX(1);}
-.menu-scan-btn:active,.menu-scan-btn.pressing{transform:scale(.98);border-color:var(--red);opacity:.85;}
-.scan-btn-icon{font-size:1.6rem;flex-shrink:0;}
-.scan-btn-text{display:flex;flex-direction:column;}
-.scan-btn-label{font-size:0.71rem;color:var(--text-muted);margin-top:3px;font-weight:400;line-height:1.4;}
+@media(max-width:480px){.menu-header h1{font-size:2.3rem;}}
 
 input[type="date"]::-webkit-calendar-picker-indicator{cursor:pointer;}
 
@@ -380,12 +368,6 @@ input[type="date"]::-webkit-calendar-picker-indicator{cursor:pointer;}
     <button class="menu-btn" onclick="navTo('unemp',this)">실업급여 계산기<span class="btn-label">지급기간 · 금액 예상 산출</span></button>
     <button class="menu-btn" onclick="navTo('sim',this)">퇴직 시뮬레이터<span class="btn-label">퇴직금 + 실업급여 통합 산출</span></button>
   </div>
-  <button class="menu-scan-btn" onclick="if(window.ScanChannel){ScanChannel.postMessage('open');}">
-    <span class="scan-btn-text">
-      급여명세서 분석
-      <span class="scan-btn-label">사진 촬영 · 갤러리 선택으로 자동 분석</span>
-    </span>
-  </button>
 </div>
 
 <div id="content-area">
