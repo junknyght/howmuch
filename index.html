@@ -33,7 +33,7 @@ body.no-scroll{overflow:hidden;}
   border-bottom:1px solid var(--card-border);display:flex;align-items:flex-end;
   padding:env(safe-area-inset-top,36px) 20px 12px;
   min-height:calc(52px + env(safe-area-inset-top,36px));}
-.top-bar-title{font-size:1.1rem;font-weight:900;color:var(--red);letter-spacing:-0.03em;}
+.top-bar-title{font-size:1.2rem;font-weight:900;color:var(--red);letter-spacing:-0.03em;}
 
 #main-menu{min-height:100vh;
   padding:calc(env(safe-area-inset-top,36px) + 72px) 18px 120px;
@@ -566,7 +566,7 @@ function yearBar(page, fn) {
     opts += '<option value="' + y + '"' + (y===2026?' selected':'') + '>' + y + '년</option>';
   }
   return '<div class="year-bar">' +
-    '<label>요율 적용 년도</label>' +
+    '<label>요율 적용</label>' +
     '<select class="year-sel" id="yr-' + page + '" onchange="setYear(\'' + page + '\',this.value);' + fn + '">' + opts + '</select>' +
     '<span class="year-badge" id="yr-badge-' + page + '">2026년 요율</span>' +
   '</div>';
@@ -698,7 +698,7 @@ function pgAnnual() {
   '<div class="dual-linked-row">' +
     '<div class="dual-col">' +
       '<div class="dual-label gross">세전 입력</div>' +
-      '<input class="inp" type="text" inputmode="numeric" id="an-sal" placeholder="예: 36,000,000" oninput="fmtInp(this);annualFromGross()">' +
+      '<input class="inp" type="text" inputmode="numeric" id="an-sal" placeholder="예: 60,000,000" oninput="fmtInp(this);annualFromGross()">' +
     '</div>' +
     lBtn('annual') +
     '<div class="dual-col">' +
@@ -995,12 +995,12 @@ function pgSal() {
   '<div class="dual-linked-row">' +
     '<div class="dual-col">' +
       '<div class="dual-label gross">세전 입력</div>' +
-      '<input class="inp" type="text" inputmode="numeric" id="t1g" placeholder="예: 3,000,000" oninput="fmtInp(this);calcSalFromGross()">' +
+      '<input class="inp" type="text" inputmode="numeric" id="t1g" placeholder="예: 5,000,000" oninput="fmtInp(this);calcSalFromGross()">' +
     '</div>' +
     lBtn('salary') +
     '<div class="dual-col">' +
       '<div class="dual-label">세후 입력</div>' +
-      '<input class="inp" type="text" inputmode="numeric" id="t2n" placeholder="통장 입금액" oninput="fmtInp(this);calcSalFromNet()">' +
+      '<input class="inp" type="text" inputmode="numeric" id="t2n" placeholder="월 실수령액" oninput="fmtInp(this);calcSalFromNet()">' +
     '</div>' +
   '</div>' +
   '<div class="c2">' +
@@ -1214,12 +1214,12 @@ function pgRet() {
   '<div class="dual-linked-row">' +
     '<div class="dual-col">' +
       '<div class="dual-label gross">세전 입력</div>' +
-      '<input class="inp" type="text" inputmode="numeric" id="rsal" placeholder="예: 3,000,000" oninput="fmtInp(this);retFromGross()">' +
+      '<input class="inp" type="text" inputmode="numeric" id="rsal" placeholder="예: 5,000,000" oninput="fmtInp(this);retFromGross()">' +
     '</div>' +
     lBtn('retire') +
     '<div class="dual-col">' +
       '<div class="dual-label">세후 입력</div>' +
-      '<input class="inp" type="text" inputmode="numeric" id="rsal-net" placeholder="통장 입금액" oninput="fmtInp(this);retFromNet()">' +
+      '<input class="inp" type="text" inputmode="numeric" id="rsal-net" placeholder="월 실수령액" oninput="fmtInp(this);retFromNet()">' +
     '</div>' +
   '</div>' +
   '<div class="c2">' +
@@ -1304,12 +1304,12 @@ function pgUne() {
   '<div class="dual-linked-row">' +
     '<div class="dual-col">' +
       '<div class="dual-label gross">세전 입력</div>' +
-      '<input class="inp" type="text" inputmode="numeric" id="usl" placeholder="예: 3,000,000" oninput="fmtInp(this);uneFromGross()">' +
+      '<input class="inp" type="text" inputmode="numeric" id="usl" placeholder="예: 5,000,000" oninput="fmtInp(this);uneFromGross()">' +
     '</div>' +
     lBtn('unemp') +
     '<div class="dual-col">' +
       '<div class="dual-label">세후 입력</div>' +
-      '<input class="inp" type="text" inputmode="numeric" id="usl-net" placeholder="통장 입금액" oninput="fmtInp(this);uneFromNet()">' +
+      '<input class="inp" type="text" inputmode="numeric" id="usl-net" placeholder="월 실수령액" oninput="fmtInp(this);uneFromNet()">' +
     '</div>' +
   '</div>' +
   '<div class="c2">' +
@@ -1403,7 +1403,7 @@ function pgSim() {
     lBtn('sim') +
     '<div class="dual-col">' +
       '<div class="dual-label">세후 입력</div>' +
-      '<input class="inp" type="text" inputmode="numeric" id="ssal-net" placeholder="통장 입금액" oninput="fmtInp(this);simFromNet()">' +
+      '<input class="inp" type="text" inputmode="numeric" id="ssal-net" placeholder="월 실수령액" oninput="fmtInp(this);simFromNet()">' +
     '</div>' +
   '</div>' +
   '<div class="c2">' +
