@@ -119,8 +119,7 @@ select.inp{appearance:none;cursor:pointer;
   background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='7'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%23666' stroke-width='1.5' fill='none'/%3E%3C/svg%3E");
   background-repeat:no-repeat;background-position:right 8px center;padding-right:24px;}
 .year-sel:focus{border-color:var(--red);outline:none;}
-.year-badge{font-size:0.68rem;font-weight:700;color:var(--red);background:rgba(225,0,42,.12);
-  border:1px solid rgba(225,0,42,.3);border-radius:4px;padding:3px 8px;white-space:nowrap;}
+.year-badge{display:none;}
 
 /* ===== 추가 공제 섹션 ===== */
 .extra-sec{margin-top:14px;border:1px solid var(--card-border);border-radius:10px;overflow:hidden;}
@@ -214,8 +213,7 @@ select.inp{appearance:none;cursor:pointer;
 .sh-cat-hdr.open{border-color:rgba(225,0,42,.35);border-radius:8px 8px 0 0;}
 .sh-cat-title{font-size:0.82rem;font-weight:800;color:var(--text-primary);}
 .sh-cat-right{display:flex;align-items:center;gap:7px;}
-.sh-cat-count{font-size:0.67rem;font-weight:800;color:#111;background:rgba(225,0,42,.18);
-  border:1px solid rgba(225,0,42,.3);border-radius:4px;padding:2px 8px;}
+.sh-cat-count{font-size:0.72rem;font-weight:800;color:var(--text-secondary);}
 .sh-cat-arrow{font-size:1.1rem;color:var(--text-muted);transition:transform .2s;line-height:1;
   display:inline-block;font-weight:300;}
 .sh-cat-hdr.open .sh-cat-arrow{transform:rotate(90deg);}
@@ -233,8 +231,8 @@ select.inp{appearance:none;cursor:pointer;
 .sh-card-btns{display:flex;gap:6px;}
 .sh-btn-detail,.sh-btn-del{flex:1;height:30px;font-size:0.71rem;font-weight:700;
   border-radius:5px;cursor:pointer;font-family:inherit;transition:all .15s;}
-.sh-btn-detail{background:rgba(225,0,42,.1);border:1px solid rgba(225,0,42,.3);color:var(--red);}
-.sh-btn-detail:hover{background:rgba(225,0,42,.2);}
+.sh-btn-detail{background:none;border:1px solid var(--card-border);color:var(--text-primary);}
+.sh-btn-detail:hover{background:rgba(255,255,255,.06);}
 .sh-btn-del{background:none;border:1px solid var(--card-border);color:var(--text-muted);}
 .sh-btn-del:hover{color:#f59e0b;border-color:#f59e0b;}
 
@@ -274,13 +272,6 @@ select.inp{appearance:none;cursor:pointer;
 .hd-row.tot .hd-rl{background:rgba(225,0,42,.1);color:var(--text-primary);border-right-color:rgba(225,0,42,.3);}
 .hd-row.tot .hd-rv{background:rgba(225,0,42,.1);color:var(--red);font-size:0.88rem;}
 
-/* ===== 스플래시 ===== */
-#splash{position:fixed;top:0;left:0;right:0;bottom:0;z-index:99999;
-  background:var(--darker);display:flex;flex-direction:column;align-items:center;justify-content:center;
-  transition:opacity .5s ease;}
-#splash.hide{opacity:0;}
-.splash-name{font-size:2.4rem;font-weight:600;color:var(--red);letter-spacing:-0.05em;}
-.splash-sub{font-size:0.85rem;font-weight:400;color:var(--text-muted);margin-top:6px;letter-spacing:0.01em;}
 
 .ov{position:fixed;top:0;left:0;right:0;bottom:0;z-index:9000;
   background:rgba(0,0,0,.65);display:flex;align-items:flex-start;justify-content:center;
@@ -321,11 +312,6 @@ input[type="date"]::-webkit-calendar-picker-indicator{cursor:pointer;}
 </style>
 </head>
 <body>
-
-<div id="splash">
-  <span class="splash-name">얼마 받지?</span>
-  <span class="splash-sub">연봉 계산기</span>
-</div>
 
 <div class="top-bar">
   <button class="hamburger-btn" onclick="openSidebar()" aria-label="메뉴">
@@ -390,14 +376,6 @@ input[type="date"]::-webkit-calendar-picker-indicator{cursor:pointer;}
 </div>
 
 <script>
-/* ===== 스플래시 ===== */
-setTimeout(function() {
-  var sp = document.getElementById('splash');
-  if (!sp) return;
-  sp.classList.add('hide');
-  setTimeout(function() { if (sp.parentNode) sp.parentNode.removeChild(sp); }, 500);
-}, 1000);
-
 /* ===== 스크롤 잠금 (단일 로직) ===== */
 var _scrollLocked = false;
 function _preventBgTouch(e) {
@@ -588,7 +566,7 @@ function yearBar(page, fn) {
     opts += '<option value="' + y + '"' + (y===2026?' selected':'') + '>' + y + '년</option>';
   }
   return '<div class="year-bar">' +
-    '<label>적용 년도</label>' +
+    '<label>요율 적용 년도</label>' +
     '<select class="year-sel" id="yr-' + page + '" onchange="setYear(\'' + page + '\',this.value);' + fn + '">' + opts + '</select>' +
     '<span class="year-badge" id="yr-badge-' + page + '">2026년 요율</span>' +
   '</div>';
@@ -608,6 +586,14 @@ var PT = {
   retire:'퇴직금 계산기', unemp:'실업급여 계산기', sim:'퇴직 시뮬레이터'
 };
 
+/* ===== history 초기 상태 세팅 =====
+   인덱스 페이지 = home (replaceState로 기반 세팅)
+   계산기 진입   = page  (pushState)
+   사이드바 열기 = sidebar (pushState)
+   상세보기 열기 = detail  (pushState)
+   저장팝업 열기 = popup   (pushState)
+   각 레이어를 닫을 때는 history.back() 한 번만, 직접 UI 조작은 programmatic 플래그로 구분
+   ================================================ */
 try { history.replaceState({ view:'home' }, ''); } catch(x) {}
 
 function navTo(id, btn) {
@@ -625,10 +611,14 @@ function showPage(id) {
 }
 
 function goHome() {
+  /* 이전 버튼 또는 뒤로가기로 호출 - history.back() 으로 처리 */
+  try { history.back(); } catch(x) { _doGoHome(); }
+}
+
+function _doGoHome() {
   var popup = document.getElementById('popup');
   if (popup) popup.style.display = 'none';
   pcid = '';
-  try { history.replaceState({ view:'home' }, ''); } catch(x) {}
   document.getElementById('main-menu').style.display  = 'flex';
   document.getElementById('content-area').style.display = 'none';
   document.getElementById('calc-wrapper').innerHTML = '';
@@ -637,17 +627,22 @@ function goHome() {
 
 window.addEventListener('popstate', function(e) {
   var state = (e.state) ? e.state : { view:'home' };
-  /* 상세보기 팝업 열려있으면 닫기 */
+
+  /* 1순위: 상세보기 팝업 열려있으면 닫기 */
   var hdOv = document.getElementById('hd-ov');
   if (hdOv && hdOv.style.display === 'flex') {
     hdOv.style.display = 'none';
     unlockScroll();
     return;
   }
-  /* 사이드바 열려있으면 닫기 */
+
+  /* 2순위: 사이드바 열려있으면 닫기 */
   if (sidebarOpen) {
-    closeSidebar(true); return;
+    closeSidebar(true);
+    return;
   }
+
+  /* 3순위: 저장 팝업 열려있으면 닫기 */
   var popup = document.getElementById('popup');
   if (popup && popup.style.display !== 'none') {
     popup.style.display = 'none';
@@ -655,11 +650,10 @@ window.addEventListener('popstate', function(e) {
     pcid = '';
     return;
   }
+
+  /* 4순위: page→home 전환 */
   if (state.view === 'home' || !state.view) {
-    document.getElementById('main-menu').style.display  = 'flex';
-    document.getElementById('content-area').style.display = 'none';
-    document.getElementById('calc-wrapper').innerHTML = '';
-    window.scrollTo(0, 0);
+    _doGoHome();
   }
 });
 
@@ -1549,9 +1543,7 @@ function closePopup(programmatic) {
   unlockScroll();
   pcid = '';
   if (programmatic) {
-    try {
-      if (history.state && history.state.view === 'popup') history.back();
-    } catch(x) {}
+    try { history.back(); } catch(x) {}
   }
 }
 
@@ -1634,9 +1626,7 @@ function execSave() {
   var cid  = pcid;
   document.getElementById('popup').style.display = 'none';
   pcid = '';
-  try {
-    if (history.state && history.state.view === 'popup') history.back();
-  } catch(x) {}
+  try { history.back(); } catch(x) {}
   if (!cid) return;
   var text = buildText(cid, memo); if (!text) return;
   var key = 'hist_' + cid, hist = [];
@@ -1665,7 +1655,8 @@ function closeSidebar(programmatic) {
   document.getElementById('sidebar-panel').classList.remove('open');
   unlockScroll();
   if (!programmatic) {
-    try { if (history.state && history.state.view === 'sidebar') history.back(); } catch(x) {}
+    /* 버튼으로 닫을 때 → history.back() 으로 sidebar 엔트리 제거 */
+    try { history.back(); } catch(x) {}
   }
 }
 
@@ -1722,7 +1713,7 @@ function renderSidebar(preserveState) {
       var first = lines[0] || '';
       var hasMemo = first.charAt(0) === '[';
       var memo = hasMemo ? first.slice(1, first.lastIndexOf(']') > 0 ? first.lastIndexOf(']') : first.length) : '';
-      var cardTitle = memo || '(메모 없음)';
+      var cardTitle = memo || '';
       var previewLines = lines.slice(hasMemo ? 1 : 0).filter(function(l){
         return l.trim() && l.indexOf('──') < 0;
       }).slice(0, 2).join(' · ');
@@ -1836,12 +1827,17 @@ function showHistDetail(i) {
   body.innerHTML = html;
   ov.style.display = 'flex';
   lockScroll();
+  try { history.pushState({ view:'detail' }, ''); } catch(x) {}
 }
 
 function closeHistDetail() {
   var ov = document.getElementById('hd-ov');
-  if (ov) ov.style.display = 'none';
-  unlockScroll();
+  if (ov && ov.style.display === 'flex') {
+    try { history.back(); } catch(x) {
+      ov.style.display = 'none';
+      unlockScroll();
+    }
+  }
 }
 
 function delHistItem(cid, idx) {
