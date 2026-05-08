@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -188,15 +189,20 @@ select.inp{appearance:none;cursor:pointer;
 .hamburger-btn span{width:20px;height:2px;background:var(--text-secondary);border-radius:2px;display:block;}
 
 /* ===== 사이드바 ===== */
-.sidebar-overlay{position:fixed;top:0;left:0;right:0;bottom:0;z-index:195;
-  background:rgba(0,0,0,.55);display:none;touch-action:none;}
-.sidebar-overlay.open{display:block;}
-.sidebar-panel{position:fixed;top:calc(env(safe-area-inset-top,36px) + 102px);left:0;bottom:0;width:300px;max-width:85vw;z-index:196;
+.sidebar-overlay{position:fixed;top:0;left:0;right:0;bottom:0;z-index:9800;
+  background:rgba(0,0,0,0);pointer-events:none;touch-action:none;
+  transition:background .28s ease;}
+.sidebar-overlay.open{background:rgba(0,0,0,.65);pointer-events:auto;}
+.sidebar-panel{position:fixed;top:0;left:0;bottom:0;width:300px;max-width:85vw;
   background:var(--card-bg);border-right:1px solid var(--card-border);
-  transform:translateX(-100%);transition:transform .25s ease;
+  transform:translateX(-100%);transition:transform .28s cubic-bezier(.4,0,.2,1);
   display:flex;flex-direction:column;overflow:hidden;}
 .sidebar-panel.open{transform:translateX(0);}
-.sidebar-hdr{padding:14px 14px 12px;
+.sidebar-spacer{display:none;}
+.sidebar-top-title{padding:14px 16px 12px;background:var(--darker);
+  font-size:1.2rem;font-weight:600;color:var(--red);letter-spacing:-0.03em;
+  flex-shrink:0;}
+.sidebar-hdr{padding:8px 14px 8px;
   background:var(--darker);border-bottom:1px solid var(--card-border);
   display:flex;align-items:center;justify-content:space-between;flex-shrink:0;}
 .sidebar-hdr-title{font-size:0.93rem;font-weight:800;color:var(--text-primary);}
@@ -325,13 +331,15 @@ input[type="date"]::-webkit-calendar-picker-indicator{cursor:pointer;}
 <div class="ad-space"></div>
 
 <!-- 사이드바 -->
-<div class="sidebar-overlay" id="sidebar-overlay" onclick="closeSidebar()"></div>
-<div class="sidebar-panel" id="sidebar-panel">
-  <div class="sidebar-hdr">
-    <span class="sidebar-hdr-title">저장 내역</span>
-    <button class="sidebar-close" onclick="closeSidebar()">닫기</button>
+<div class="sidebar-overlay" id="sidebar-overlay" onclick="closeSidebar()">
+  <div class="sidebar-panel" id="sidebar-panel" onclick="event.stopPropagation()">
+    <div class="sidebar-top-title">얼마 받지?</div>
+    <div class="sidebar-hdr">
+      <span class="sidebar-hdr-title">저장 내역</span>
+      <button class="sidebar-close" onclick="closeSidebar()">닫기</button>
+    </div>
+    <div class="sidebar-body" id="sidebar-body"></div>
   </div>
-  <div class="sidebar-body" id="sidebar-body"></div>
 </div>
 
 <!-- 상세보기 팝업 -->
@@ -1646,10 +1654,16 @@ var _sdItems = [];
 
 function openSidebar() {
   sidebarOpen = true;
-  document.getElementById('sidebar-overlay').classList.add('open');
-  document.getElementById('sidebar-panel').classList.add('open');
-  lockScroll();
   renderSidebar();
+  lockScroll();
+  var ov = document.getElementById('sidebar-overlay');
+  var panel = document.getElementById('sidebar-panel');
+  requestAnimationFrame(function() {
+    requestAnimationFrame(function() {
+      ov.classList.add('open');
+      panel.classList.add('open');
+    });
+  });
   try { history.pushState({ view:'sidebar' }, ''); } catch(x) {}
 }
 
@@ -1659,7 +1673,6 @@ function closeSidebar(programmatic) {
   document.getElementById('sidebar-panel').classList.remove('open');
   unlockScroll();
   if (!programmatic) {
-    /* 버튼으로 닫을 때 → history.back() 으로 sidebar 엔트리 제거 */
     try { history.back(); } catch(x) {}
   }
 }
