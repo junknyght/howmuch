@@ -25,7 +25,7 @@
   box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
 html{overflow-x:hidden;}
 body{background:var(--dark);color:var(--text-primary);-webkit-text-size-adjust:none;overflow-x:hidden;}
-body.no-scroll{overflow:hidden;}
+body.no-scroll{overflow:hidden;position:fixed;width:100%;left:0;}
 .hd-body,.sidebar-body{overscroll-behavior:contain;-webkit-overflow-scrolling:touch;}
 .ov,.hd-ov{touch-action:none;}
 
@@ -39,7 +39,7 @@ body.no-scroll{overflow:hidden;}
 .top-bar-title{font-size:1.2rem;font-weight:600;color:var(--red);letter-spacing:-0.03em;}
 
 #main-menu{min-height:100vh;
-  padding:calc(env(safe-area-inset-top,36px) + 122px) 18px 120px;
+  padding:calc(env(safe-area-inset-top,36px) + 102px) 18px 120px;
   display:flex;flex-direction:column;align-items:center;justify-content:center;}
 .menu-header{text-align:center;margin-bottom:2rem;}
 .menu-header h1{font-size:2.8rem;font-weight:600;color:var(--red);letter-spacing:-0.05em;line-height:1;}
@@ -397,9 +397,12 @@ function _preventBgTouch(e) {
   }
   e.preventDefault();
 }
+var _savedScrollY = 0;
 function lockScroll() {
   if (_scrollLocked) return;
   _scrollLocked = true;
+  _savedScrollY = window.scrollY || window.pageYOffset;
+  document.body.style.top = '-' + _savedScrollY + 'px';
   document.body.classList.add('no-scroll');
   document.addEventListener('touchmove', _preventBgTouch, { passive: false });
 }
@@ -407,6 +410,8 @@ function unlockScroll() {
   if (!_scrollLocked) return;
   _scrollLocked = false;
   document.body.classList.remove('no-scroll');
+  document.body.style.top = '';
+  window.scrollTo(0, _savedScrollY);
   document.removeEventListener('touchmove', _preventBgTouch, { passive: false });
 }
 
