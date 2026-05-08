@@ -30,10 +30,12 @@ body.no-scroll{overflow:hidden;}
 .ov,.hd-ov{touch-action:none;}
 
 .top-bar{position:fixed;top:0;left:0;right:0;z-index:200;background:var(--darker);
-  border-bottom:1px solid var(--card-border);display:flex;align-items:flex-end;
+  display:flex;align-items:flex-end;
   padding:env(safe-area-inset-top,36px) 20px 8px;
   min-height:calc(40px + env(safe-area-inset-top,36px));}
 .top-bar-title{font-size:1.2rem;font-weight:600;color:var(--red);letter-spacing:-0.03em;}
+.ad-space{position:fixed;top:calc(40px + env(safe-area-inset-top,36px));left:0;right:0;
+  height:50px;background:var(--darker);z-index:199;}
 
 #main-menu{min-height:100vh;
   padding:calc(env(safe-area-inset-top,36px) + 90px) 18px 120px;
@@ -54,7 +56,7 @@ body.no-scroll{overflow:hidden;}
 
 #content-area{display:none;padding-top:calc(env(safe-area-inset-top,36px) + 90px);}
 .nav-bar{position:sticky;top:calc(env(safe-area-inset-top,36px) + 40px);z-index:100;
-  background:var(--darker);border-bottom:1px solid var(--card-border);
+  background:var(--darker);
   padding:11px 18px;display:flex;align-items:center;gap:12px;}
 .back-link{color:var(--red);font-weight:700;cursor:pointer;display:flex;align-items:center;gap:5px;
   font-size:0.88rem;padding:5px 10px;border-radius:6px;border:1px solid var(--card-border);transition:all .2s;}
@@ -320,6 +322,7 @@ input[type="date"]::-webkit-calendar-picker-indicator{cursor:pointer;}
   </button>
   <span class="top-bar-title">얼마 받지?</span>
 </div>
+<div class="ad-space"></div>
 
 <!-- 사이드바 -->
 <div class="sidebar-overlay" id="sidebar-overlay" onclick="closeSidebar()"></div>
