@@ -33,11 +33,9 @@ body.no-scroll{overflow:hidden;position:fixed;width:100%;left:0;}
   display:flex;align-items:flex-end;
   padding:env(safe-area-inset-top,36px) 20px 12px;
   min-height:calc(52px + env(safe-area-inset-top,36px));}
-.top-bar-spacer{height:calc(env(safe-area-inset-top,36px) + 52px);}
-.admob-banner{display:none;}
-.top-bar-title{font-size:1.2rem;font-weight:600;color:var(--red);letter-spacing:-0.03em;}
+.top-bar-spacer{height:calc(env(safe-area-inset-top,36px) + 52px);}.top-bar-title{font-size:1.2rem;font-weight:600;color:var(--red);letter-spacing:-0.03em;}
 
-#main-menu{min-height:calc(100vh - 50px);
+#main-menu{min-height:100vh;
   padding:20px 18px 120px;
   display:flex;flex-direction:column;align-items:center;justify-content:center;}
 .menu-header{text-align:center;margin-bottom:2rem;}
@@ -121,7 +119,7 @@ select.inp{appearance:none;cursor:pointer;
   background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='7'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%23666' stroke-width='1.5' fill='none'/%3E%3C/svg%3E");
   background-repeat:no-repeat;background-position:right 8px center;padding-right:24px;}
 .year-sel:focus{border-color:var(--red);outline:none;}
-.year-badge{display:none;}
+
 
 /* ===== 추가 공제 섹션 ===== */
 .extra-sec{margin-top:14px;border:1px solid var(--card-border);border-radius:10px;overflow:hidden;}
@@ -218,7 +216,7 @@ select.inp{appearance:none;cursor:pointer;
 .sh-cat-count{font-size:0.72rem;font-weight:800;color:var(--text-secondary);margin-right: 4px;}
 .sh-cat-arrow{font-size:1.5rem;color:var(--text-muted);transition:transform .2s;line-height:1;
   display:inline-block;font-weight:300;transform: translateY(-3px);}
-  .active .sh-cat-arrow {transform: translateY(-4px) rotate(90deg);}
+
 .sh-cat-hdr.open .sh-cat-arrow{transform:rotate(90deg);}
 .sh-cat-body{display:none;border:1px solid rgba(225,0,42,.25);border-top:none;
   border-radius:0 0 8px 8px;padding:8px 8px 4px;background:var(--darker);}
@@ -324,10 +322,6 @@ input[type="date"]::-webkit-calendar-picker-indicator{cursor:pointer;}
 </div>
 <div class="top-bar-spacer"></div>
 
-<!-- AdMob 배너 광고 (50dp) -->
-<div class="admob-banner" id="admob-banner">
-  <!-- AdMob 광고 코드 삽입 위치 -->
-</div>
 
 <!-- 사이드바 -->
 <div class="sidebar-overlay" id="sidebar-overlay" onclick="closeSidebar()"></div>
@@ -582,14 +576,11 @@ function yearBar(page, fn) {
   return '<div class="year-bar">' +
     '<label>요율 적용</label>' +
     '<select class="year-sel" id="yr-' + page + '" onchange="setYear(\'' + page + '\',this.value);' + fn + '">' + opts + '</select>' +
-    '<span class="year-badge" id="yr-badge-' + page + '">2026년 요율</span>' +
   '</div>';
 }
 
 function setYear(page, yr) {
   curYear[page] = parseInt(yr);
-  var badge = document.getElementById('yr-badge-' + page);
-  if (badge) badge.textContent = yr + '년 요율';
 }
 
 /* ===== 히스토리 / 화면 전환 ===== */
@@ -618,8 +609,6 @@ function navTo(id, btn) {
 function showPage(id) {
   document.getElementById('main-menu').style.display  = 'none';
   document.getElementById('content-area').style.display = 'block';
-  var ad = document.getElementById('admob-banner');
-  if (ad) ad.style.display = 'none';
   document.getElementById('nav-title').textContent = PT[id] || '';
   document.getElementById('calc-wrapper').innerHTML = buildPage(id);
   window.scrollTo(0, 0);
@@ -637,8 +626,6 @@ function _doGoHome() {
   pcid = '';
   document.getElementById('main-menu').style.display  = 'flex';
   document.getElementById('content-area').style.display = 'none';
-  var ad = document.getElementById('admob-banner');
-  if (ad) ad.style.display = '';
   document.getElementById('calc-wrapper').innerHTML = '';
   window.scrollTo(0, 0);
 }
@@ -686,8 +673,6 @@ function buildPage(id) {
   return '';
 }
 
-var AD = '';
-
 function hdr(t, cid) {
   return '<div class="card-header"><h2>' + t + '</h2>' +
     '<button class="btn-reset" onclick="doReset(\'' + cid + '\')">초기화</button>' +
@@ -709,7 +694,7 @@ function numInp(id, ph, fn) {
 
 /* ===== 연봉 계산기 ===== */
 function pgAnnual() {
-  return AD + '<div class="card" id="card-annual">' + hdr('연봉 계산기', 'card-annual') +
+  return '<div class="card" id="card-annual">' + hdr('연봉 계산기', 'card-annual') +
   '<div class="card-body">' +
   yearBar('annual', 'annualAny()') +
 
@@ -1005,7 +990,7 @@ function calcExtraAnnual() {
 
 /* ===== 월급 계산기 ===== */
 function pgSal() {
-  return AD + '<div class="card" id="card-salary">' + hdr('월급 계산기', 'card-salary') +
+  return '<div class="card" id="card-salary">' + hdr('월급 계산기', 'card-salary') +
   '<div class="card-body">' +
   yearBar('salary', 'calcSal()') +
 
@@ -1152,7 +1137,7 @@ function updateSalFml(y, R) {
 
 /* ===== 시급 계산기 ===== */
 function pgHourly() {
-  return AD + '<div class="card" id="card-hourly">' + hdr('시급 계산기', 'card-hourly') +
+  return '<div class="card" id="card-hourly">' + hdr('시급 계산기', 'card-hourly') +
   '<div class="card-body">' +
   yearBar('hourly', 'calcHourly()') +
   '<div class="c2">' +
@@ -1221,7 +1206,7 @@ function calcHourly() {
 
 /* ===== 퇴직금 ===== */
 function pgRet() {
-  return AD + '<div class="card" id="card-retire">' + hdr('퇴직금 계산기', 'card-retire') +
+  return '<div class="card" id="card-retire">' + hdr('퇴직금 계산기', 'card-retire') +
   '<div class="card-body">' +
   yearBar('retire', 'calcRet()') +
   '<div class="c2">' +
@@ -1310,7 +1295,7 @@ function calcRet() {
 
 /* ===== 실업급여 ===== */
 function pgUne() {
-  return AD + '<div class="card" id="card-unemp">' + hdr('실업급여 계산기', 'card-unemp') +
+  return '<div class="card" id="card-unemp">' + hdr('실업급여 계산기', 'card-unemp') +
   '<div class="card-body">' +
   yearBar('unemp', 'calcUne()') +
   '<div class="c2">' +
@@ -1404,7 +1389,7 @@ function calcUne() {
 
 /* ===== 시뮬레이터 ===== */
 function pgSim() {
-  return AD + '<div class="card" id="card-sim">' + hdr('퇴직 시뮬레이터', 'card-sim') +
+  return '<div class="card" id="card-sim">' + hdr('퇴직 시뮬레이터', 'card-sim') +
   '<div class="card-body">' +
   yearBar('sim', 'calcSim()') +
   '<div class="c2">' +
